@@ -1,55 +1,14 @@
 import { 
-  createSlice,
-  createAsyncThunk,
   createSelector,
   createEntityAdapter
  } from '@reduxjs/toolkit';
 import { sub } from 'date-fns';
-import axios from 'axios';
-const POSTS_URL = 'https://jsonplaceholder.typicode.com/posts';
 
 const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt)
 });
 
-const initialState = postsAdapter.getInitialState({
-  status: 'idle',
-  error: null
-});
-
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => (
-  await axios.get(POSTS_URL)
-    .then((response) => response.data)
-    .catch(e => console.error(e))
-));
-
-export const addPost = createAsyncThunk('posts/addPost', async (newPost) => (
-  await axios.post(POSTS_URL, newPost)
-    .then((response) => response.data)
-    .catch((e) => console.error(e))
-));
-
-export const editPost = createAsyncThunk('posts/editPost', async (editedPost) => {
-  try {
-    const { id } = editedPost;
-    const res = await axios.put(`${POSTS_URL}/${id}`, editedPost)
-    return res.data
-  } catch(err) {
-    // return err.message;
-    return editedPost; // Return edited post to update state for posts that don't exist on fake API
-  }  
-});
-
-export const deletePost = createAsyncThunk('posts/deletePost', async (postToDelete) => {
-  const { id } = postToDelete;
-  return await axios.delete(`${POSTS_URL}/${id}`, postToDelete)
-    .then((response) => {
-      if (response.status === 200) {
-        return postToDelete;
-      }
-      return `${response.status}: ${response.statusText}`;
-    });
-});
+const initialState = postsAdapter.getInitialState();
 
 const postsSlice = createSlice({
   name: 'posts',
