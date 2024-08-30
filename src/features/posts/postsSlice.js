@@ -1,7 +1,7 @@
 import { 
   createSelector,
   createEntityAdapter
- } from '@reduxjs/toolkit';
+} from '@reduxjs/toolkit';
 import { sub } from 'date-fns';
 import { apiSlice } from '../api/apiSlice';
 
@@ -12,14 +12,53 @@ const postsAdapter = createEntityAdapter({
 const initialState = postsAdapter.getInitialState();
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
-
+  endpoints: builder => ({
+    getPosts: builder.query({
+      query: () => '/posts',
+      transformResponse: allPosts => {
+        const loadedPosts = allPosts.map(post => {
+          if (!post.createdAt)
+            post.createdAt = sub(
+              new Date(),
+              { minutes: Math.random() * 500 }
+            ).toISOString();
+          
+          if (!post.reactions)
+            post.reactions = {
+              thumbsUp: 0,
+              wow: 0,
+              heart: 0,
+              rocket: 0,
+              coffee: 0
+            }
+            return post;
+        })
+        return postsAdapter.setAll(initialState, loadedPosts);
+      }
+    }),
+    providesTags: (result, error, arg) => [
+      { type: 'Post', id: "POSTLIST" },
+      ...result.ids.map(id => ({ type: 'Post', id }))
+    ]
+  })
 });
+
+export const {
+  useGetPostsQuery,
+} = extendedApiSlice;
+
+export const selectPostsResult = extendedApiSlice.endpoints.getPosts.select();
+
+const selectPostsData = createSelector(
+  selectPostsResult,
+  postsResult => postsResult.data
+);
 
 export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,
   selectIds: selectPostIds
-} = postsAdapter.getSelectors(state => state.posts);
+} = postsAdapter.getSelectors(state => selectPostsData(state) ?? initialState);
 
 // createSelector creates a memoized selector which takes
 // any number of input fns and uses their return values
