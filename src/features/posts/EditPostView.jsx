@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { selectPostById, editPost } from "./postsSlice";
+import { selectPostById, useUpdatePostMutation } from "./postsSlice";
 import UsersOptions from "./UsersOptions";
 
 
@@ -11,6 +11,7 @@ const EditPostView = () => {
   const dispatch = useDispatch();
 
   const postToEdit = useSelector((state) => selectPostById(state, Number(postId)));
+  const [updatePost, { isLoading }] = useUpdatePostMutation();
 
   if (!postToEdit) {
     return (
