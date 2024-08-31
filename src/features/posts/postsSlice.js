@@ -90,6 +90,29 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     invalidatesTags: [
       { type: 'Post', id: "LIST" }
     ]
+  }),
+  updatePost: builder.mutation({
+    query: postToUpdate => ({
+      url: `/posts/${postToUpdate.id}`,
+      method: 'PUT',
+      body: {
+        ...postToUpdate,
+        createdAt: new Date().toISOString()
+      }
+    }),
+    invalidatesTags: (result, error, arg) => [
+      { type: 'Post', id: arg.id }
+    ] 
+  }),
+  deletePost: builder.mutation({
+    query: ({ id }) => ({
+      url: `/posts/${id}`,
+      method: 'DELETE',
+      body: { id } 
+    }),
+    invalidatesTags: (result, error, arg) => [
+      { type: 'Post', id: arg.id }
+    ]
   })
 });
 
