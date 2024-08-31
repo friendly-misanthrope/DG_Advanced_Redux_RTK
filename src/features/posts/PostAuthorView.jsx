@@ -6,7 +6,9 @@ const PostAuthorView = ({userId}) => {
   const author = users.find(user => user.id === userId);
 
   return (
-    <span>by {author? author.name : 'Unknown Author'}</span>
+    <span>by {author? <Link to={`/users/${userId}`}>
+      {author.name}
+    </Link> : 'Unknown Author'}</span>
   )
 }
 
