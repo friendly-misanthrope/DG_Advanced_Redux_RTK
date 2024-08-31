@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addPost } from "./postsSlice";
+import { useAddNewPostMutation } from "./postsSlice";
 import UsersOptions from './UsersOptions';
 
 const AddPostView = () => {
@@ -11,6 +10,8 @@ const AddPostView = () => {
     userId: ''
   });
 
+  const [addNewPost, { isLoading }] = useAddNewPostMutation();
+  
   const [postReqStatus, setPostReqStatus] = useState('idle');
 
   const dispatch = useDispatch();
