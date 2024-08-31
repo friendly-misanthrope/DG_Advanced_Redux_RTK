@@ -11,10 +11,7 @@ const AddPostView = () => {
   });
 
   const [addNewPost, { isLoading }] = useAddNewPostMutation();
-  
-  const [postReqStatus, setPostReqStatus] = useState('idle');
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {title, body, userId} = post;
 
@@ -24,25 +21,22 @@ const AddPostView = () => {
     });
   }
 
-  const postIsValid = [title, body, userId].every(Boolean) && postReqStatus === 'idle';
+  const postIsValid = [title, body, userId].every(Boolean) && !isLoading;
 
-  const savePostOnClick = (e) => {
+  const savePostOnClick = async (e) => {
     e.preventDefault();
 
     if (postIsValid) {
       try {
-        setPostReqStatus('pending');
-        dispatch(addPost({title, body, userId})).unwrap();
+        await addNewPost({title, body, userId}).unwrap();
         setPost({
           title: '',
           body: '',
           userId: ''
         });
+        navigate('/');
       } catch(e) {
         console.error('Unable to save post', e);
-      } finally {
-        setPostReqStatus('idle');
-        navigate('/');
       }
     }
   }
