@@ -2,23 +2,25 @@
 import { useSelector } from "react-redux";
 import { BallTriangle } from "react-loader-spinner";
 import PostsExcerpt from "./PostsExcerptView";
-import {
-  selectPostIds,
-  getPostsStatus,
-  getPostsError,
-} from "./postsSlice";
+import { selectPostIds } from "./postsSlice";
+import { useGetPostsQuery } from "./postsSlice";
 
 const PostsView = () => {
 
+  const {
+    isLoading,
+    isSuccess,
+    isError,
+    error: postsError
+  } = useGetPostsQuery();
+
   // postsSlice selectors
-  const orderedPostIds = useSelector(selectPostIds)
-  const postsStatus = useSelector(getPostsStatus);
-  const postsError = useSelector(getPostsError);
+  const orderedPostIds = useSelector(selectPostIds);
 
   let content;
 
   // Loading spinner
-  if (postsStatus === "pending") {
+  if (isLoading) {
     content = 
     <>
       <p className="loader">Loading...</p>
@@ -29,12 +31,12 @@ const PostsView = () => {
       </div>
     </>
     // Render post content if fetch successful
-  } else if (postsStatus === "fulfilled") {
+  } else if (isSuccess) {
     content = orderedPostIds.map((postId) => (
       <PostsExcerpt key={postId} postId={postId} />
     ));
     // PostsView content if fetch not successful
-  } else if (postsStatus === "rejected") {
+  } else if (isError) {
     content = <p>{postsError}</p>;
   }
 
