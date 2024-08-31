@@ -40,11 +40,62 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       { type: 'Post', id: "POSTLIST" },
       ...result.ids.map(id => ({ type: 'Post', id }))
     ]
+  }),
+  getPostsByUserId: builder.query({
+    query: id => `/posts/?userId=${id}`,
+    transformResponse: postsData => {
+      const loadedPosts = postsData.map(post => {
+        if (!post.createdAt)
+          post.createdAt = sub(
+            new Date(),
+            { minutes: Math.random() * 500 }
+          ).toISOString();
+
+          if (!post.reactions)
+            post.reactions = {
+              thumbsUp: 0,
+              wow: 0,
+              heart: 0,
+              rocket: 0,
+              coffee: 0
+            }
+            return post;
+      });
+      return postsAdapter.setAll(initialState, loadedPosts);
+    },
+    providesTags: (result, error, arg) => {
+      console.log(result);
+      return [
+        ...result.ids.map(id => ({type: 'Post', id}))
+      ];
+    }
+  }),
+  addNewPost: builder.mutation({
+    query: newPost => ({
+      url: '/posts',
+      method: 'POST',
+      body: {
+        ...newPost,
+        userId: Number(initialPost.userId),
+        createdAt: new Date().toISOString(),
+        reactions: {
+          thumbsUp: 0,
+          wow: 0,
+          heart: 0,
+          rocket: 0,
+          coffee: 0
+        }
+      }
+    }),
+    invalidatesTags: [
+      { type: 'Post', id: "LIST" }
+    ]
   })
 });
 
 export const {
   useGetPostsQuery,
+  useGetPostsByUserIdQuery
 } = extendedApiSlice;
 
 export const selectPostsResult = extendedApiSlice.endpoints.getPosts.select();
