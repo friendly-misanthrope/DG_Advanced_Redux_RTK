@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { selectAllUsers } from "../users/usersSlice";
+import { Link } from 'react-router-dom';
 
 const PostAuthorView = ({userId}) => {
   const users = useSelector(selectAllUsers);

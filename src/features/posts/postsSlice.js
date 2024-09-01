@@ -75,7 +75,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: {
           ...newPost,
-          userId: Number(initialPost.userId),
+          userId: Number(newPost.userId),
           createdAt: new Date().toISOString(),
           reactions: {
             thumbsUp: 0,
@@ -87,7 +87,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         }
       }),
       invalidatesTags: [
-        { type: 'Post', id: "LIST" }
+        { type: 'Post', id: "POSTLIST" }
       ]
     }),
     updatePost: builder.mutation({
