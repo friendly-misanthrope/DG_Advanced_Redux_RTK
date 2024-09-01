@@ -97,6 +97,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       method: 'PUT',
       body: {
         ...postToUpdate,
+        // todo: try using updatedAt field instead
         createdAt: new Date().toISOString()
       }
     }),

@@ -6,12 +6,13 @@ import UsersOptions from "./UsersOptions";
 
 
 const EditPostView = () => {
+  // Hooks
   const { postId } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const postToEdit = useSelector((state) => selectPostById(state, Number(postId)));
   const [updatePost, { isLoading }] = useUpdatePostMutation();
+
+  // Post selector
+  const postToEdit = useSelector((state) => selectPostById(state, Number(postId)));
 
   if (!postToEdit) {
     return (
@@ -21,15 +22,13 @@ const EditPostView = () => {
     );
   }
 
-  const [postReqStatus, setPostReqStatus] = useState('idle');
   const [editedPost, setEditedPost] = useState({
     id: postToEdit.id,
     title: postToEdit.title,
     body: postToEdit.body,
     userId: postToEdit.userId,
     reactions: postToEdit.reactions,
-    createdAt: postToEdit.createdAt,
-    userId: postToEdit.userId
+    createdAt: postToEdit.createdAt
   });
 
   const { title, body, userId } = editedPost;
@@ -40,26 +39,21 @@ const EditPostView = () => {
     });
   }
 
-  const postIsValid = [title, body, userId].every(Boolean) && postReqStatus === 'idle';
+  const postIsValid = [title, body, userId].every(Boolean) && !isLoading;
   
-  const updatePostOnClick = (e) => {
+  const updatePostOnClick = async (e) => {
     e.preventDefault();
-
     if (postIsValid) {
       try {
-        setPostReqStatus('pending');
-        dispatch(editPost(editedPost))
-          .unwrap();
+        await updatePost(postToEdit).unwrap();
         setEditedPost({
           title: '',
           body: '',
           userId: ''
         });
+        navigate(`/post/${postToEdit.id}`);
       } catch(err) {
         console.error('Unable to update post\n', err);
-      } finally {
-        setPostReqStatus('idle');
-        navigate(`/post/${postToEdit.id}`);
       }
     }
   }

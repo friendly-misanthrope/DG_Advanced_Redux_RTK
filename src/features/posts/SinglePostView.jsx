@@ -1,6 +1,6 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { selectPostById, deletePost } from './postsSlice';
+import { selectPostById, useDeletePostMutation } from './postsSlice';
 import PostAuthorView from './PostAuthorView';
 import CreatedAt from './CreatedAtView';
 import ReactionsView from './ReactionsView';
@@ -9,16 +9,17 @@ const SinglePostView = () => {
 
   const { postId } = useParams();
   const post = useSelector((state) => selectPostById(state, Number(postId)));
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onDeletePostClicked = (e) => {
+  const [ deletePost ] = useDeletePostMutation();
+
+  const onDeletePostClicked = async (e) => {
     e.preventDefault();
     if (post) {
       if (window.confirm(
         "Are you sure you want to delete this post? This action cannot be undone."
       )){
-        dispatch(deletePost(post));
+        await deletePost({ id: post.id }).unwrap();
         navigate('/');
       }
     }
