@@ -44,7 +44,7 @@ const SingleUserView = () => {
   return (
     <section>
       <h2>{`Posts by ${user?.name}`}</h2>
-      <ol>{postLinks}</ol>
+      <ol>{content}</ol>
     </section>
   );
 }
