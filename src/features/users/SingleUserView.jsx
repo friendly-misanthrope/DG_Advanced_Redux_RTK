@@ -1,19 +1,45 @@
 import { useSelector } from "react-redux";
 import { selectUserById } from "./usersSlice";
-import { selectPostsByUser } from "../posts/postsSlice";
+import { useGetPostsByUserIdQuery } from "../posts/postsSlice";
+import { BallTriangle } from "react-loader-spinner";
+
 import { Link, useParams } from "react-router-dom";
 
 const SingleUserView = () => {
   const { userId } = useParams();
   const user = useSelector(state => selectUserById(state, Number(userId)));
 
-  const userPosts = useSelector(state => selectPostsByUser(state, Number(userId)));
+  const {
+    data: userPosts,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetPostsByUserIdQuery();
 
-  const postLinks = userPosts.map((post) => (
-    <li key={post.id}>
-      <Link to={`/post/${post.id}`}>{post.title}</Link>
-    </li>
-  ));
+  let content;
+
+  if (isLoading) {
+    content = 
+    <>
+      <p className="loader">Loading...</p>
+      <div className="loader">
+        <BallTriangle 
+        height={100}
+        color="#61dbfb" />
+      </div>
+    </>
+  } else if (isSuccess) {
+    const { ids, entities } = userPosts;
+    content = ids.map((id) => (
+      <li key={id}>
+        <Link to={`/post/${id}`}>{entities[id].title}</Link>
+      </li>
+    ));
+  } else if (isError) {
+    content =
+    <p>{ error }</p>
+  }
 
   return (
     <section>
