@@ -45,7 +45,7 @@ const EditPostView = () => {
     e.preventDefault();
     if (postIsValid) {
       try {
-        await updatePost(postToEdit).unwrap();
+        await updatePost(editedPost).unwrap();
         setEditedPost({
           title: '',
           body: '',

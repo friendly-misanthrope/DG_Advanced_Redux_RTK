@@ -15,7 +15,7 @@ const SingleUserView = () => {
     isSuccess,
     isError,
     error
-  } = useGetPostsByUserIdQuery();
+  } = useGetPostsByUserIdQuery(userId);
 
   let content;
 

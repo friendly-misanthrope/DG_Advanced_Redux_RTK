@@ -14,7 +14,7 @@ const initialState = postsAdapter.getInitialState();
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getPosts: builder.query({
-      query: () => '/posts',
+      query: () => `/posts`,
       transformResponse: allPosts => {
         const loadedPosts = allPosts.map(post => {
           if (!post.createdAt)
@@ -41,9 +41,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       ]
     }),
     getPostsByUserId: builder.query({
-      query: id => `/posts/?userId=${id}`,
-      transformResponse: postsData => {
-        const loadedPosts = postsData.map(post => {
+      query: (id) => `/posts/?userId=${id}`,
+      transformResponse: responseData => {
+        const loadedPosts = responseData.map(post => {
           if (!post.createdAt)
             post.createdAt = sub(
               new Date(),
@@ -62,12 +62,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         });
         return postsAdapter.setAll(initialState, loadedPosts);
       },
-      providesTags: (result, error, arg) => {
-        console.log(result);
-        return [
-          ...result.ids.map(id => ({type: 'Post', id}))
-        ];
-      }
+      providesTags: (result, error, arg) => [
+        ...result.ids.map((id) => ({ type: 'Post', id }))
+      ]
     }),
     addNewPost: builder.mutation({
       query: newPost => ({
