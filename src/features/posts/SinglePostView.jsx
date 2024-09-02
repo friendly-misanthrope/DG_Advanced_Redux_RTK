@@ -8,7 +8,7 @@ import ReactionsView from './ReactionsView';
 const SinglePostView = () => {
 
   const { postId } = useParams();
-  const post = useSelector((state) => selectPostById(state, Number(postId)));
+  const post = useSelector((state) => selectPostById(state, postId));
   const navigate = useNavigate();
 
   const [ deletePost ] = useDeletePostMutation();

@@ -3,17 +3,41 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { selectPostById, useUpdatePostMutation } from "./postsSlice";
 import UsersOptions from "./UsersOptions";
+import { useEffect } from "react";
 
 
 const EditPostView = () => {
   // Hooks
   const { postId } = useParams();
+  const postToEdit = useSelector((state) => selectPostById(state, postId));
+  const [editedPost, setEditedPost] = useState({
+    id: '',
+    title: '',
+    body: '',
+    userId: '',
+    reactions: {},
+    createdAt: ''
+  });
+
+  useEffect(() => {
+    if (postToEdit) {
+      setEditedPost({
+        id: postToEdit.id,
+        title: postToEdit.title,
+        body: postToEdit.body,
+        userId: postToEdit.userId,
+        reactions: postToEdit.reactions,
+        createdAt: postToEdit.createdAt
+      }) 
+    }
+  },[postToEdit])
+  
+  const { title, body, userId } = editedPost;
+  
   const navigate = useNavigate();
   const [updatePost, { isLoading }] = useUpdatePostMutation();
 
-  // Post selector
-  const postToEdit = useSelector((state) => selectPostById(state, Number(postId)));
-
+  
   if (!postToEdit) {
     return (
       <section>
@@ -22,21 +46,12 @@ const EditPostView = () => {
     );
   }
 
-  const [editedPost, setEditedPost] = useState({
-    id: postToEdit.id,
-    title: postToEdit.title,
-    body: postToEdit.body,
-    userId: postToEdit.userId,
-    reactions: postToEdit.reactions,
-    createdAt: postToEdit.createdAt
-  });
-
-  const { title, body, userId } = editedPost;
+  
 
   const postChangeHandler  = (e) => {
-    setEditedPost(prevState => {
-      return {...prevState, [e.target.name]: e.target.value}
-    });
+    setEditedPost(prevState => (
+      {...prevState, [e.target.name]: e.target.value}
+    ));
   }
 
   const postIsValid = [title, body, userId].every(Boolean) && !isLoading;

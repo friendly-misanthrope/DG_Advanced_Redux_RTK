@@ -353,10 +353,18 @@
       "body": "qui consequuntur ducimus possimus quisquam amet similique\nsuscipit porro ipsam amet\neos veritatis officiis exercitationem vel fugit aut necessitatibus totam\nomnis rerum consequatur expedita quidem cumque explicabo"
     },
     {
-      "userId": 3,
       "id": "21",
-      "title": "asperiores ea ipsam voluptatibus modi minima quia sint",
-      "body": "repellat aliquid praesentium dolorem quo\nsed totam minus non itaque\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\ntempora et tenetur expedita sunt"
+      "title": "updated title",
+      "body": "repellat aliquid praesentium dolorem quo\nsed totam minus non itaque\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\ntempora et tenetur expedita sunt",
+      "userId": 3,
+      "reactions": {
+        "thumbsUp": 0,
+        "wow": 0,
+        "heart": 0,
+        "rocket": 0,
+        "coffee": 0
+      },
+      "createdAt": "2024-09-02T03:31:00.631Z"
     },
     {
       "userId": 3,
@@ -899,6 +907,34 @@
         "rocket": 0,
         "coffee": 0
       }
+    },
+    {
+      "id": "c5e4",
+      "title": "Hey hey",
+      "body": "My my",
+      "userId": 12,
+      "createdAt": "2024-09-02T03:15:32.213Z",
+      "reactions": {
+        "thumbsUp": 1,
+        "wow": 1,
+        "heart": 0,
+        "rocket": 0,
+        "coffee": 0
+      }
+    },
+    {
+      "id": "ea0c",
+      "title": "Hey hey (edit)",
+      "body": "My my...",
+      "userId": 12,
+      "reactions": {
+        "thumbsUp": 0,
+        "wow": 0,
+        "heart": 0,
+        "rocket": 0,
+        "coffee": 0
+      },
+      "createdAt": "2024-09-02T03:32:26.687Z"
     }
   ]
 }
